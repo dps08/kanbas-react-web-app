@@ -59,7 +59,6 @@ My favorite books (in no particular order)
 </ul>
 Your favorite books (in no particular order)
 <ul id="wd-your-books">
-  {/* complete on your own */}
 </ul>
 <div id="wd-tables">
         <h4>Table Tag</h4>
@@ -259,7 +258,7 @@ Your favorite books (in no particular order)
       value="2000-01-21"/><br/>
 <h4>Anchor tag</h4>
 Please
-<a id="wd-github" href="https://github.com/">click here</a>
+<a id="wd-github" href="https://github.com/dps08/kanbas-react-web-app.git">click here</a>
 to get dummy text<br/>
 
       </div>
