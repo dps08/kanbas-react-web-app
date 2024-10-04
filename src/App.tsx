@@ -15,6 +15,3 @@ export default function App() {
     </HashRouter>
   );
 }
-
-// Add this line if the error persists
-export {};
