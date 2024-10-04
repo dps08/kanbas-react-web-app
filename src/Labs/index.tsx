@@ -1,13 +1,15 @@
 import React from 'react';
-import {Lab1} from "./Lab1";
+import { Lab1 } from "./Lab1";
 import { Route, Routes, Navigate } from "react-router";
 import TOC from "./TOC";
 import Lab2 from "./Lab2";
 import Lab3 from "./Lab3";
+
 export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <h2>Divit Pratap Singh</h2> {/* Your full name */}
       <TOC />
       <Routes>
         <Route path="/" element={<Navigate to="Lab1" />} />
@@ -18,6 +20,3 @@ export default function Labs() {
     </div>
   );
 }
-
-// Add this line at the end of the file
-export {};
