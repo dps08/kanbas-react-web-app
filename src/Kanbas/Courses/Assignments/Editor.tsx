@@ -1,32 +1,51 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiOutlineCheck, AiOutlineEllipsis } from "react-icons/ai";
+import { Link, useParams } from "react-router-dom";
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
+    const { cid, aid } = useParams();
+    const assignment = db.assignments.find((assignment) => assignment._id === aid);
+
     return (
         <div id="wd-assignments-editor" className="container">
             <h2>Edit Assignment</h2>
             <form>
                 <div className="mb-3">
                     <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-                    <input id="wd-name" className="form-control" defaultValue="A1 - ENV + HTML" />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="wd-description" className="form-label">Description</label>
-                    <textarea id="wd-description" className="form-control" rows={4}>
-                        The assignment is available online. Submit a link to the landing page of your project.
-                    </textarea>
+                    <input
+                        id="wd-name"
+                        className="form-control"
+                        defaultValue={assignment ? assignment.title : ""}
+                    />
                 </div>
                 <div className="mb-3 row">
                     <label htmlFor="wd-points" className="col-sm-2 col-form-label">Points</label>
                     <div className="col-sm-10">
-                        <input id="wd-points" className="form-control" defaultValue={100} />
+                        <input
+                            id="wd-points"
+                            className="form-control"
+                            defaultValue={assignment ? assignment.points : ""}
+                        />
                     </div>
                 </div>
                 <div className="mb-3 row">
+  <label htmlFor="wd-available-date" className="col-sm-2 col-form-label">Available Date</label>
+  <div className="col-sm-10">
+    <input type="date" id="wd-available-date" className="form-control" defaultValue={assignment?.availableDate} />
+  </div>
+</div>
+
+                <div className="mb-3 row">
                     <label htmlFor="wd-due-date" className="col-sm-2 col-form-label">Due Date</label>
                     <div className="col-sm-10">
-                        <input type="date" id="wd-due-date" className="form-control" />
+                        <input
+                            type="date"
+                            id="wd-due-date"
+                            className="form-control"
+                            defaultValue={assignment ? assignment.dueDate : ""}
+                        />
                     </div>
                 </div>
                 <div className="mb-3 row">
@@ -58,11 +77,11 @@ export default function AssignmentEditor() {
                     </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                    <button type="submit" className="btn btn-success me-2">
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-outline-secondary me-2">
+                        <AiOutlineEllipsis /> Cancel
+                    </Link>
+                    <button type="submit" className="btn btn-success">
                         <AiOutlineCheck /> Save
-                    </button>
-                    <button type="button" className="btn btn-outline-secondary">
-                        <AiOutlineEllipsis /> Options
                     </button>
                 </div>
             </form>
