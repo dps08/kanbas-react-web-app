@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import VariablesAndConstants from "./VariablesAndConstants";
 import BooleanVariables from "./BooleanVariables";
 import TernaryOperator from "./TernaryOperator";
@@ -32,10 +33,20 @@ import Highlight from './Highlight';
 import PathParameters from './PathParameters';
 
 export default function Lab3() {
-  console.log("Hello World!");
+  const { todos } = useSelector((state: any) => state.todosReducer);
+
   return (
     <div>
       <h3>Lab 3</h3>
+      <h4>Todos from Redux</h4>
+      <ul className="list-group">
+        {todos.map((todo: any) => (
+          <li className="list-group-item" key={todo.id}>
+            {todo.title}
+          </li>
+        ))}
+      </ul>
+      <hr />
       <VariablesAndConstants />
       <BooleanVariables />
       <IfElse />
