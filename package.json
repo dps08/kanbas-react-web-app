@@ -53,6 +53,8 @@
       "@typescript-eslint"
     ]
   },
+
+
   "devDependencies": {
     "@types/react": "^18.3.12"
   }
