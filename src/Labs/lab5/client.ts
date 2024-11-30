@@ -9,14 +9,27 @@ export const fetchAssignment = async () => {
   const response = await axios.get(`${ASSIGNMENT_API}`);
   return response.data;
 };
+
+
+
 export const updateTitle = async (title: string) => {
   const response = await axios.get(`${ASSIGNMENT_API}/title/${title}`);
+  return response.data;
+};
+export const updateDescription = async (description: string) => {
+  const response = await axios.get(`${ASSIGNMENT_API}/description/${description}`);
+  return response.data;
+};
+
+export const updateDue = async (due: string) => {
+  const response = await axios.get(`${ASSIGNMENT_API}/due/${due}`);
   return response.data;
 };
 export const updateTodo = async (todo: any) => {
     const response = await axios.put(`${TODOS_API}/${todo.id}`, todo);
     return response.data;
   };
+
   
 
 const TODOS_API = `https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/todos`;
@@ -41,6 +54,5 @@ export const removeTodo = async (todo: any) => {
     const response = await axios.post(`${TODOS_API}`, todo);
     return response.data;
   };
-  
   
   
