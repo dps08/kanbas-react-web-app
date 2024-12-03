@@ -1,44 +1,60 @@
-
 import React, { useState } from "react";
+
+const MODULE_API_URL = "https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/module";
+
 export default function ModuleObjects() {
   const [module, setModule] = useState({
-    id: 1, name: "NodeJS Module",
-    description: "Create a NodeJS server with ExpressJS",
-    due: "2021-10-10", completed: false, score: 0,
+    id: 1,
+    name: "Introduction to NodeJS",
+    description: "Learn the basics of Node.js",
+    course: "Web Development",
   });
-  const MODULE_API_URL = `https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/module`
+
   return (
     <div>
-      <h3 id="wd-module-objects">Module Objects</h3>
-      <h4>Modifying Properties</h4>
-      <a id="wd-update-module-name"
-         className="btn btn-primary float-end"
-         href={`${MODULE_API_URL}/name/${module.name}`}>
-        Update name
-      </a>
-      <input className="form-control w-75" id="wd-module-name"
-        defaultValue={module.name} onChange={(e) =>
-          setModule({ ...module, name: e.target.value })}/>
-      <hr />
-      <a id="wd-update-module-description"
-         className="btn btn-primary float-end"
-         href={`${MODULE_API_URL}/description/${module.description}`}>
-        Update description
-      </a>
-      <input className="form-control w-75" id="wd-module-description"
-        defaultValue={module.description} onChange={(e) =>
-          setModule({ ...module, description: e.target.value })}/>
-      <hr />
-      <h4>Retrieving Objects</h4>
-      <a id="wd-retrieve-module" className="btn btn-primary"
-         href={`https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/module`}>
-        Get Module
-      </a><hr/>
-      <h4>Retrieving Properties</h4>
-      <a id="wd-retrieve-module-module" className="btn btn-primary"
-         href={`https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/module/name`}>
-        Get Module Name
-      </a><hr/>
-    </div>
-);}
+      <h3>Module Management</h3>
 
+      <h4>Retrieve Module</h4>
+      <a href={`${MODULE_API_URL}`} className="btn btn-primary">
+        Get Module
+      </a>
+      <a href={`${MODULE_API_URL}/name`} className="btn btn-secondary ms-2">
+        Get Module Name
+      </a>
+      <hr />
+
+      <h4>Modify Module</h4>
+      <div>
+        <input
+          type="text"
+          value={module.name}
+          onChange={(e) => setModule({ ...module, name: e.target.value })}
+          className="form-control"
+        />
+        <a
+          href={`${MODULE_API_URL}/name/${module.name}`}
+          className="btn btn-primary mt-2"
+        >
+          Update Name
+        </a>
+      </div>
+      <hr />
+
+      <div>
+        <input
+          type="text"
+          value={module.description}
+          onChange={(e) => setModule({ ...module, description: e.target.value })}
+          className="form-control"
+        />
+        <a
+          href={`${MODULE_API_URL}/description/${module.description}`}
+          className="btn btn-primary mt-2"
+        >
+          Update Description
+        </a>
+      </div>
+      <hr />
+    </div>
+  );
+}

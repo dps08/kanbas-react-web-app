@@ -4,9 +4,9 @@ export default function QueryParameters() {
     const [a, setA] = useState("34");
     const [b, setB] = useState("23");
     return (
-        <div id="wd-query-parameters">
-  <h3>Query Parameters</h3>
-  <input id="wd-query-parameter-a"
+    <div id="wd-query-parameters">
+      <h3>Query Parameters</h3>
+      <input id="wd-query-parameter-a"
          className="form-control mb-2"
          defaultValue={a} type="number"
          onChange={(e) => setA(e.target.value)} />

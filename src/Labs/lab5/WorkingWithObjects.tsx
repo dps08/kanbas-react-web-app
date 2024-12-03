@@ -1,66 +1,78 @@
-
 import React, { useState } from "react";
+
+const ASSIGNMENT_API_URL = "https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/assignment";
+
 export default function WorkingWithObjects() {
   const [assignment, setAssignment] = useState({
-    id: 1, title: "NodeJS Assignment",
+    id: 1,
+    title: "NodeJS Assignment",
     description: "Create a NodeJS server with ExpressJS",
-    due: "2021-10-10", completed: false, score: 0,
+    due: "2021-10-10",
+    completed: false,
+    score: 0,
   });
-  const ASSIGNMENT_API_URL = `https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/assignment`
+
   return (
     <div>
-      <h3 id="wd-working-with-objects">Working With Objects</h3>
-      <h4>Modifying Properties</h4>
-      <a id="wd-update-assignment-title"
-         className="btn btn-primary float-end"
-         href={`${ASSIGNMENT_API_URL}/title/${assignment.title}`}>
-        Update Title
-      </a>
-      
-      <input className="form-control w-75" id="wd-assignment-title"
-        defaultValue={assignment.title} onChange={(e) =>
-          setAssignment({ ...assignment, title: e.target.value })}/>
-      <hr />
-      <a id="wd-update-assignment-score"
-         className="btn btn-primary float-end"
-         href={`${ASSIGNMENT_API_URL}/score/${assignment.score}`}>
-        Update Score
-      </a>
-      
-      <input className="form-control w-75" id="wd-assignment-score"
-      type="number"
-        defaultValue={assignment.score} onChange={(e) =>
-          setAssignment({ ...assignment, score:Number( e.target.value )})}/>
-      <hr />
-      <a
-  id="wd-update-assignment-completed"
-  className="btn btn-primary float-end"
-  href={`${ASSIGNMENT_API_URL}/completed/${assignment.completed}`}
->
-  Update status
-</a>
+      <h3>Working With Objects</h3>
 
-<input
-  className="form-control w-75"
-  id="wd-assignment-completed"
-  
-  checked={assignment.completed} 
-  onChange={(e) =>
-    setAssignment({ ...assignment, completed: e.target.checked }) 
-  }
-/>
-<hr />
-
-      <h4>Retrieving Objects</h4>
-      <a id="wd-retrieve-assignments" className="btn btn-primary"
-         href={`https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/assignment`}>
+      <h4>Retrieve Assignment</h4>
+      <a href={`${ASSIGNMENT_API_URL}`} className="btn btn-primary">
         Get Assignment
-      </a><hr/>
-      <h4>Retrieving Properties</h4>
-      <a id="wd-retrieve-assignment-title" className="btn btn-primary"
-         href={`https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/assignment/title`}>
-        Get Title
-      </a><hr/>
-    </div>
-);}
+      </a>
+      <a href={`${ASSIGNMENT_API_URL}/title`} className="btn btn-secondary ms-2">
+        Get Assignment Title
+      </a>
+      <hr />
 
+      <h4>Modify Assignment</h4>
+      <div>
+        <input
+          type="text"
+          value={assignment.title}
+          onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
+          className="form-control"
+        />
+        <a
+          href={`${ASSIGNMENT_API_URL}/title/${assignment.title}`}
+          className="btn btn-primary mt-2"
+        >
+          Update Title
+        </a>
+      </div>
+      <hr />
+
+      <div>
+        <input
+          type="number"
+          value={assignment.score}
+          onChange={(e) => setAssignment({ ...assignment, score: Number(e.target.value) })}
+          className="form-control"
+        />
+        <a
+          href={`${ASSIGNMENT_API_URL}/score/${assignment.score}`}
+          className="btn btn-primary mt-2"
+        >
+          Update Score
+        </a>
+      </div>
+      <hr />
+
+      <div>
+        <input
+          type="checkbox"
+          checked={assignment.completed}
+          onChange={(e) => setAssignment({ ...assignment, completed: e.target.checked })}
+        />
+        <label className="ms-2">Completed</label>
+        <a
+          href={`${ASSIGNMENT_API_URL}/completed/${assignment.completed}`}
+          className="btn btn-primary mt-2"
+        >
+          Update Completed
+        </a>
+      </div>
+      <hr />
+    </div>
+  );
+}
