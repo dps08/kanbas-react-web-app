@@ -1,42 +1,40 @@
-import { NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import "./styles.css";
+import React from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function CoursesNavigation() {
+  const { cid } = useParams();  // Course ID from the URL
+  const { pathname } = useLocation();  // Current path for active link highlighting
 
-  const { pathname } = useLocation(); // Get the current pathname
+  // Ensure that `cid` is defined to avoid issues with invalid paths
+  if (!cid) {
+    return null; // Render nothing or a fallback UI if `cid` is undefined
+  }
 
-  // Links array for course navigation
-  const links = [
-    { label: "Home", path: "Home" },
-    { label: "Modules", path: "Modules" },
-    { label: "Piazza", path: "Piazza" },
-    { label: "Zoom", path: "Zoom" },
-    { label: "Assignments", path: "Assignments" },
-  
-    { label: "Quizzes", path: "Quizzes" },
-    { label: "Grades", path: "Grades" },
-    { label: "People", path: "People" },
-  ];
-
-  
+  // Define the course sections that will appear in the navigation
+  const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "People"];
 
   return (
-    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link) => (
-        <NavLink
-          key={link.path}
-          to={`/Kanbas/Courses/${pathname.split("/")[3]}/${link.path}`} // Construct path dynamically using courseId and link path
-          id={`wd-course-${link.path.toLowerCase()}-link`}
-          className={({ isActive }) =>
-            `list-group-item list-group-item-border text-danger border border-0 ${
-              isActive ? "active" : ""
-            }`
-          }
-        >
-          {link.label}
-        </NavLink>
-      ))}
+    <div id="wd-courses-navigation" className="list-group fs-5 rounded-0">
+      {links.map((link) => {
+        // Construct the navigation path dynamically with `cid`
+        const linkPath = `/Kanbas/Courses/${cid}/${link.toLowerCase()}`;
+        
+        // Check if the current path matches the exact link's path for active highlighting
+        const isActive = pathname === linkPath;
+
+        return (
+          <Link
+            key={link}
+            to={linkPath}
+            id={`wd-course-${link.toLowerCase()}-link`}
+            className={`list-group-item border-0 ${
+              isActive ? "active text-white bg-primary" : "text-danger bg-light"
+            }`}
+          >
+            {link}
+          </Link>
+        );
+      })}
     </div>
   );
 }
