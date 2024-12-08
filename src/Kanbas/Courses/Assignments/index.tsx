@@ -1,8 +1,8 @@
 import { BsGripVertical } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
-
+import AssignmentControls from "./AssignmentControls";
 import { IoEllipsisVertical } from "react-icons/io5";
-
+import AssignmentCOntrolButtons from "./AssignmentControlButtons";
 import { AiOutlinePlus } from "react-icons/ai";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { useParams } from "react-router";
@@ -12,8 +12,6 @@ import { setAssignments } from "./reducer";
 import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 import { useEffect } from "react";
-import AssignmentControls from "./AssignmentControls";
-import AssignmentCOntrolButtons from "./AssignmentControlButtons";
 
 export default function Assignments() {
   const { cid } = useParams();

@@ -1,40 +1,43 @@
-// src/Kanbas/Courses/reducer.ts
-
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-// Define the Enrollment interface
-interface Enrollment {
-  user: string;
-  course: string;
-}
-
-// Define initial state, loading from localStorage if available
-const initialEnrollments: Enrollment[] = JSON.parse(
-  localStorage.getItem("enrollments") || "[]"
-);
+import { createSlice } from "@reduxjs/toolkit";
+const initialState = {
+    courses: [],
+};
 
 const coursesSlice = createSlice({
-  name: "courses",
-  initialState: {
-    enrollments: initialEnrollments,  // Ensure enrollments is initialized
-    modules: [],  // Other parts of the state if needed
-  },
-  reducers: {
-    enrollUser: (state, action: PayloadAction<{ userId: string; courseId: string }>) => {
-      const { userId, courseId } = action.payload;
-      const newEnrollment = { user: userId, course: courseId };
-      state.enrollments.push(newEnrollment);
-      localStorage.setItem("enrollments", JSON.stringify(state.enrollments));
+    name: "courses",
+    initialState,
+    reducers: {
+        initializeCourses: (state, action) => {
+            state.courses = action.payload;
+        },
+        addCourse: (state, { payload: course }) => {
+            const newCourse: any = {
+                _id: new Date().getTime().toString(),
+                name: course.name,
+                number: course.number,
+                startDate: course.startDate,
+                endDate: course.endDate,
+                department: course.department,
+                credits: course.credits,
+                imgSource: course.imgSource,
+                description: course.description
+            };
+            state.courses = [...state.courses, newCourse] as any;
+        },
+        deleteCourse: (state, { payload: courseID }) => {
+            state.courses = state.courses.filter(
+                (course: any) => course._id !== courseID
+            );
+        },
+        updateCourse: (state, { payload: course }) => {
+            state.courses = state.courses.map((c: any) =>
+                c._id === course._id ? course : c
+            ) as any;
+        }
     },
-    unenrollUser: (state, action: PayloadAction<{ userId: string; courseId: string }>) => {
-      const { userId, courseId } = action.payload;
-      state.enrollments = state.enrollments.filter(
-        (enrollment) => !(enrollment.user === userId && enrollment.course === courseId)
-      );
-      localStorage.setItem("enrollments", JSON.stringify(state.enrollments));
-    },
-  },
 });
 
-export const { enrollUser, unenrollUser } = coursesSlice.actions;
+export const { initializeCourses, addCourse, deleteCourse, updateCourse } =
+    coursesSlice.actions;
+
 export default coursesSlice.reducer;

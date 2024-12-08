@@ -3,7 +3,6 @@ import GreenCheckmark from "./GreenCheckmark";
 import { FaTrash } from "react-icons/fa";
 import DeleteDialog from "./DeleteDialog";
 import { useSelector } from "react-redux";
-import React from "react";
 export default function AssignmentCOntrolButtons({ assignmentID, deleteAssignment }: { assignmentID: string, deleteAssignment: (assignmentID: string) => void; }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === 'FACULTY';

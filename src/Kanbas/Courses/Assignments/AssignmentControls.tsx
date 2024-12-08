@@ -1,4 +1,3 @@
-import React from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { useSelector } from "react-redux";
