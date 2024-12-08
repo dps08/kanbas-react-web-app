@@ -7,7 +7,7 @@ import "./styles.css";
 import Labs from "../Labs";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./Account/ProtectedRoute";
-import Session from "./Account/session";
+
 import { useDispatch, useSelector } from "react-redux";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
@@ -15,6 +15,7 @@ import { setEnrollments } from "./Account/Enrollments/reducer";
 import { initializeCourses, addCourse } from "./Courses/reducer"
 import { enroll, unenroll } from "./Account/Enrollments/reducer";
 import * as enrollmentsClient from "./Account/Enrollments/client";
+import Session from "./Account/Session";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
