@@ -132,7 +132,7 @@ export default function Dashboard({
                                         to={isEnrolled ? `/Kanbas/Courses/${course._id}/Home` : '#'}
                                         className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column"
                                     >
-                                        <img src={course.imgag || "/images/reactjs.jpg"} width="100%" height={160} />
+                                        <img src={course.image || "/images/reactjs.jpg"} width="100%" height={160} />
                                         <div className="card-body flex-grow-1">
                                             <h5 className="wd-dashboard-course-title card-title">
                                                 {course.name}
