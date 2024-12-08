@@ -163,79 +163,72 @@ export default function Dashboard({
                 key={course._id}
               >
                 <div className="card h-100 rounded-3 overflow-hidden d-flex flex-column">
-                  <Link
-                    to={
-                      currentUser.role === "FACULTY" || isEnrolled
-                        ? `/Kanbas/Courses/${course._id}/Home`
-                        : "#"
-                    }
-                    className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column"
-                  >
-                    <img
-                      src={course.image || `/images/${course.name || course.number}.jpg`}
-                      className="card-img-top"
-                      height={160}
-                      alt={`${course.name || course.number} thumbnail`}
-                    />
-                    <div className="card-body flex-grow-1">
-                      <h5 className="wd-dashboard-course-title card-title">
-                        {course.name}
-                      </h5>
-                      <p
-                        className="wd-dashboard-course-title card-text overflow-y-hidden"
-                        style={{ maxHeight: 100 }}
-                      >
-                        {course.description}
-                      </p>
-                    </div>
-                    <div className="card-footer border-top">
-                      {currentUser.role === "FACULTY" ? (
-                        <>
-                          <button
-                            onClick={(event) => {
-                              event.preventDefault();
-                              setCourse(course);
-                            }}
-                            className="btn btn-warning me-2"
-                            id="wd-edit-course-click"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={(event) => {
-                              event.preventDefault();
-                              deleteCourse(course._id);
-                            }}
-                            className="btn btn-danger"
-                            id="wd-delete-course-click"
-                          >
-                            Delete
-                          </button>
-                        </>
-                      ) : (
+                  <img
+                    src={course.image || `/images/${course.name || course.number}.jpg`}
+                    className="card-img-top"
+                    height={160}
+                    alt={`${course.name || course.number} thumbnail`}
+                  />
+                  <div className="card-body flex-grow-1">
+                    <h5 className="wd-dashboard-course-title card-title">
+                      {course.name}
+                    </h5>
+                    <p
+                      className="wd-dashboard-course-title card-text overflow-y-hidden"
+                      style={{ maxHeight: 100 }}
+                    >
+                      {course.description}
+                    </p>
+                  </div>
+                  <div className="card-footer border-top">
+                    <Link
+                      to={
+                        currentUser.role === "FACULTY" || isEnrolled
+                          ? `/Kanbas/Courses/${course._id}/Home`
+                          : "#"
+                      }
+                      className="btn btn-primary"
+                    >
+                      Go
+                    </Link>
+                    {currentUser.role === "FACULTY" && (
+                      <>
                         <button
-                          id={
-                            isEnrolled
-                              ? "wd-unenroll-course"
-                              : "wd-enroll-course"
-                          }
-                          className={`btn ${
-                            isEnrolled
-                              ? "btn-danger"
-                              : "btn-success"
-                          }`}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            isEnrolled
-                              ? handleUnenroll(course._id)
-                              : handleEnroll(course._id);
-                          }}
+                          onClick={() => setCourse(course)}
+                          className="btn btn-warning me-2"
+                          id="wd-edit-course-click"
                         >
-                          {isEnrolled ? "Unenroll" : "Enroll"}
+                          Edit
                         </button>
-                      )}
-                    </div>
-                  </Link>
+                        <button
+                          onClick={() => deleteCourse(course._id)}
+                          className="btn btn-danger"
+                          id="wd-delete-course-click"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                    {currentUser.role !== "FACULTY" && (
+                      <button
+                        id={
+                          isEnrolled
+                            ? "wd-unenroll-course"
+                            : "wd-enroll-course"
+                        }
+                        className={`btn ${
+                          isEnrolled ? "btn-danger" : "btn-success"
+                        } float-end`}
+                        onClick={() =>
+                          isEnrolled
+                            ? handleUnenroll(course._id)
+                            : handleEnroll(course._id)
+                        }
+                      >
+                        {isEnrolled ? "Unenroll" : "Enroll"}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
