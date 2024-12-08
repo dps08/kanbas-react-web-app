@@ -15,8 +15,8 @@ export default function Modules() {
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
   const saveModule = async (module: any) => {
-    const savedModule = await modulesClient.updateModule(module); // Ensure it is updated in the backend
-    dispatch(updateModule(savedModule)); // Update the module in the Redux store
+    await modulesClient.updateModule(module); // Ensure it is updated in the backend
+    dispatch(updateModule(module)); // Update the module in the Redux store
 };
 
 
@@ -62,15 +62,20 @@ dispatch(addModule(savedModule)); // Add the fully persisted module
                       {module.name}
                     </span>)}
                     {module.editing && (
-                      <input className="form-control w-50 d-inline-block"
-                        onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            saveModule({ ...module, editing: false });
-                          }
-                        }}
-                        defaultValue={module.name} />
-                    )}
+    <input
+        className="form-control w-50 d-inline-block"
+        value={module.name} // Controlled component
+        onChange={(e) => {
+            const updatedModule = { ...module, name: e.target.value };
+            dispatch(updateModule(updatedModule)); // Update Redux state immediately
+            saveModule(updatedModule); // Persist changes to backend directly
+        }}
+        onBlur={() => {
+            saveModule({ ...module, editing: false }); // Save changes on blur and exit edit mode
+        }}
+    />
+)}
+
                   </div>
                   <div className="module-controls d-flex align-items-center ms-3" style={{ flexShrink: 0 }}>
                     <ModuleControlButtons
