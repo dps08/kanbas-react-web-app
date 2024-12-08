@@ -93,6 +93,22 @@ export default function Dashboard({
                             setCourse({ ...course, description: e.target.value })
                         }
                     />
+                    <input
+    type="file"
+    className="form-control mb-2"
+    accept="image/*"
+    onChange={(e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCourse({ ...course, image: reader.result as string });
+            };
+            reader.readAsDataURL(file);
+        }
+    }}
+/>
+
                 </div>
             )}
 
@@ -116,7 +132,7 @@ export default function Dashboard({
                                         to={isEnrolled ? `/Kanbas/Courses/${course._id}/Home` : '#'}
                                         className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column"
                                     >
-                                        <img src={course.imgSource} width="100%" height={160} />
+                                        <img src={course.imgag || "/images/reactjs.jpg"} width="100%" height={160} />
                                         <div className="card-body flex-grow-1">
                                             <h5 className="wd-dashboard-course-title card-title">
                                                 {course.name}
