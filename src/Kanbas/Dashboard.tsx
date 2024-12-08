@@ -129,10 +129,11 @@ export default function Dashboard({
                         return (
                             <div className="wd-dashboard-course col" style={{ width: "300px" }} key={course._id}>
                                 <div className="card h-100 rounded-3 overflow-hidden d-flex flex-column">
-                                    <Link
-                                        to={isEnrolled ? `/Kanbas/Courses/${course._id}/Home` : '#'}
-                                        className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column"
-                                    >
+                                <Link
+    to={isFaculty || isEnrolled ? `/Kanbas/Courses/${course._id}/Home` : '#'}
+    className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column"
+>
+
                                         <img src={course.image || "/images/reactjs.jpg"} width="100%" height={160} />
                                         <div className="card-body flex-grow-1">
                                             <h5 className="wd-dashboard-course-title card-title">
