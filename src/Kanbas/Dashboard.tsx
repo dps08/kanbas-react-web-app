@@ -39,23 +39,20 @@ export default function Dashboard({
 
   // Handle enrollments
   const handleUnenroll = async (courseId: string) => {
-    const enrollment = enrollments.find(
-        (enrollment: any) =>
-            enrollment.user === currentUser._id && enrollment.course === courseId
-    );
-    if (enrollment) {
-        await enrollmentsClient.unEnrollUser(courseId); // Save to backend
-        dispatch(unenroll(enrollment._id)); // Remove the enrollment from Redux store
-    }
-};
-
+      const enrollment = enrollments.find(
+          (enrollment: any) =>
+              enrollment.user === currentUser._id && enrollment.course === courseId
+      );
+      if (enrollment) {
+          dispatch(unenroll(enrollment._id));
+          await enrollmentsClient.unEnrollUser(courseId);
+      }
+  };
 
   const handleEnroll = async (courseId: string) => {
-    const newEnrollment = { user: currentUser._id, course: courseId };
-    await enrollmentsClient.enrollUser(courseId); // Save to backend
-    dispatch(enroll(newEnrollment)); // Update Redux store with the new enrollment
-};
-
+      dispatch(enroll({ user: currentUser._id, course: courseId }));
+      await enrollmentsClient.enrollUser(courseId);
+  };
 
   return (
       <div id="wd-dashboard">
