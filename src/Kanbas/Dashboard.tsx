@@ -113,9 +113,10 @@ export default function Dashboard({
                 </div>
             )}
 
-            <h2 id="wd-dashboard-published">
-                {"Published Courses"} ({enrollments.length})
-            </h2>
+<h2 id="wd-dashboard-published">
+    {"Published Courses"} ({isFaculty ? courses.length : enrolledCourses.length})
+</h2>
+
             <hr />
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">

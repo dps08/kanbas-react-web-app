@@ -19,7 +19,7 @@ const coursesSlice = createSlice({
                 endDate: course.endDate,
                 department: course.department,
                 credits: course.credits,
-                imgSource: course.imgSource,
+                image: course.image,
                 description: course.description
             };
             state.courses = [...state.courses, newCourse] as any;
