@@ -16,18 +16,18 @@ export default function Modules() {
   const dispatch = useDispatch();
   const saveModule = async (module: any) => {
     await modulesClient.updateModule(module); // Ensure it is updated in the backend
-    dispatch(updateModule(module)); // Update the module in the Redux store
+    dispatch(updateModule({ ...module, editing: false })); // Update the module in the Redux store
 };
 
 
-  const createModuleForCourse = async () => {
-    if (!cid) return;
-    const newModule = { name: moduleName, course: cid };
-    const module = await coursesClient.createModuleForCourse(cid, newModule);
-    const savedModule = await modulesClient.updateModule(module); // Persist module to the backend
-dispatch(addModule(savedModule)); // Add the fully persisted module
+const createModuleForCourse = async () => {
+  if (!cid) return;
+  const newModule = { name: moduleName, course: cid };
+  const createdModule = await coursesClient.createModuleForCourse(cid, newModule); // Create the module in the backend
+  dispatch(addModule(createdModule)); // Immediately add the created module to the Redux store
+  setModuleName(""); // Clear the input field
+};
 
-  };
   const removeModule = async (moduleId: string) => {
     await modulesClient.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
@@ -64,17 +64,24 @@ dispatch(addModule(savedModule)); // Add the fully persisted module
                     {module.editing && (
     <input
         className="form-control w-50 d-inline-block"
-        value={module.name} // Controlled component
-        onChange={(e) => {
-            const updatedModule = { ...module, name: e.target.value };
-            dispatch(updateModule(updatedModule)); // Update Redux state immediately
-            saveModule(updatedModule); // Persist changes to backend directly
+        defaultValue={module.name} // Default value allows inline editing
+        onKeyDown={(e) => {
+            if (e.key === "Enter") {
+                const updatedModule = { ...module, name: (e.target as HTMLInputElement).value, editing: false };
+                dispatch(updateModule(updatedModule)); // Update Redux immediately for UI update
+                saveModule(updatedModule); // Save to the backend
+            }
         }}
         onBlur={() => {
-            saveModule({ ...module, editing: false }); // Save changes on blur and exit edit mode
+            const updatedModule = { ...module, editing: false };
+            saveModule(updatedModule); // Save on blur
+        }}
+        onChange={(e) => {
+            dispatch(updateModule({ ...module, name: e.target.value })); // Update Redux in real-time
         }}
     />
 )}
+
 
                   </div>
                   <div className="module-controls d-flex align-items-center ms-3" style={{ flexShrink: 0 }}>
