@@ -12,7 +12,6 @@ export default function Signup() {
     dispatch(setCurrentUser(currentUser));
     navigate("/Kanbas/Account/Profile");
   };
-
   return (
     <div className="wd-signup-screen">
       <h1>Sign up</h1>
