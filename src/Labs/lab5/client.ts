@@ -1,10 +1,10 @@
 import axios from "axios";
-
+const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 export const fetchWelcomeMessage = async () => {
-  const response = await axios.get(`https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/welcome`);
+  const response = await axios.get(`${REMOTE_SERVER}/lab5/welcome`);
   return response.data;
 };
-const ASSIGNMENT_API = `https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/assignment`;
+const ASSIGNMENT_API = `${REMOTE_SERVER}/lab5/assignment`;
 export const fetchAssignment = async () => {
   const response = await axios.get(`${ASSIGNMENT_API}`);
   return response.data;
@@ -32,7 +32,7 @@ export const updateTodo = async (todo: any) => {
 
   
 
-const TODOS_API = `https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/todos`;
+const TODOS_API = `${REMOTE_SERVER}/lab5/todos`;
 export const fetchTodos = async () => {
   const response = await axios.get(TODOS_API);
   return response.data;

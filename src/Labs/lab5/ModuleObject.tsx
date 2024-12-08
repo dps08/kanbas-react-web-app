@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
-const MODULE_API_URL = "https://kanbas-node-server-app-divit-2bc1b0d87817.herokuapp.com/lab5/module";
+const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
+const MODULE_API_URL = `${REMOTE_SERVER}/lab5/module`
 
 export default function ModuleObjects() {
   const [module, setModule] = useState({
