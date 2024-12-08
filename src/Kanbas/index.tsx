@@ -7,7 +7,7 @@ import "./styles.css";
 import Labs from "../Labs";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./Account/ProtectedRoute";
-
+import Session from "./Account/Session";
 import { useDispatch, useSelector } from "react-redux";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
@@ -15,7 +15,6 @@ import { setEnrollments } from "./Account/Enrollments/reducer";
 import { initializeCourses, addCourse } from "./Courses/reducer"
 import { enroll, unenroll } from "./Account/Enrollments/reducer";
 import * as enrollmentsClient from "./Account/Enrollments/client";
-import Session from "./Account/Session";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -27,66 +26,96 @@ export default function Kanbas() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
-  const fetchCourses = async () => {
-    let courses = [];
+  const [enrolling, setEnrolling] = useState<boolean>(false);
+  const findCoursesForUser = async () => {
     try {
-      courses = await userClient.fetchAllCourses();
+      const courses = await userClient.findCoursesForUser(currentUser._id);
+      const updatedCourses = courses.map((course: any) => ({
+        ...course,
+        enrolled: true
+      }));
+      setCourses(updatedCourses);
     } catch (error) {
       console.error(error);
     }
-    dispatch(initializeCourses(courses));
-    setCourses(courses);
   };
 
-  const fetchEnrollments = async () => {
-    let enrollments = [];
+  const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+    if (enrolled) {
+      await userClient.enrollIntoCourse(currentUser._id, courseId);
+    } else {
+      await userClient.unenrollFromCourse(currentUser._id, courseId);
+    }
+    setCourses(
+      courses.map((course) => {
+        if (course._id === courseId) {
+          return { ...course, enrolled: enrolled };
+        } else {
+          return course;
+        }
+      })
+    );
+  };
+ 
+  const fetchCourses = async () => {
     try {
-      enrollments = await userClient.fetchEnrollmentsForUser();
+      const allCourses = await courseClient.fetchAllCourses();
+      const enrolledCourses = await userClient.findCoursesForUser(
+        currentUser._id
+      );
+      const courses = allCourses.map((course: any) => {
+        if (enrolledCourses.find((c: any) => c._id === course._id)) {
+          return { ...course, enrolled: true };
+        } else {
+          return course;
+        }
+      });
+      setCourses(courses);
     } catch (error) {
       console.error(error);
     }
-    dispatch(setEnrollments(enrollments));
   };
 
   useEffect(() => {
-    fetchCourses();
-    fetchEnrollments();
-  }, [currentUser]);
+    if (enrolling) {
+      fetchCourses();
+    } else {
+      findCoursesForUser();
+    }
+  }, [currentUser, enrolling]);
 
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
+    const newCourse = await courseClient.createCourse(course);
     setCourses([...courses, { ...course, ...newCourse }]);
     dispatch(addCourse(course));
     dispatch(enroll({ user: currentUser._id, course: newCourse._id }));
   };
 
   const deleteCourse = async (courseId: string) => {
-    try {
-        console.log("Deleting course:", courseId); // Debug log
-        const status = await courseClient.deleteCourse(courseId);
-        if (status === 204) {
-            setCourses(courses.filter((course) => course._id !== courseId));
-        } else {
-            console.error("Failed to delete course");
-        }
-    } catch (error) {
-        console.error("Error deleting course:", error);
+    const status = await courseClient.deleteCourse(courseId);
+    setCourses(courses.filter((course) => course._id !== courseId));
+    const enrollment = enrollments.find(
+      (enrollment: any) =>
+        enrollment.user === currentUser._id && enrollment.course === courseId
+    );
+    if (enrollment) {
+      dispatch(unenroll(enrollment._id));
+      await enrollmentsClient.unEnrollUser(courseId);
     }
-};
-
+  };
 
   const updateCourse = async () => {
-    if (!course._id) {
-        console.error("Cannot update course without an ID");
-        return;
-    }
-    console.log("Updating course:", course); // Debug log
     await courseClient.updateCourse(course);
     setCourses(
-      courses.map((c) => (c._id === course._id ? course : c))
+      courses.map((c) => {
+        if (c._id === course._id) {
+          return course;
+        } else {
+          return c;
+        }
+      })
     );
-};
-
+  };
   return (
     <Session>
       <div id="wd-kanbas" className="d-flex">
@@ -97,8 +126,8 @@ export default function Kanbas() {
           <Routes>
             <Route path="/" element={<Navigate to="Dashboard" />} />
             <Route path="/Account/*" element={<Account />} />
-            <Route path="/Dashboard" element={<ProtectedRoute><Dashboard courses={courses} course={course} setCourse={setCourse} addNewCourse={addNewCourse} deleteCourse={deleteCourse} updateCourse={updateCourse} /></ProtectedRoute>} />
-            <Route path="/Courses" element={<ProtectedRoute><Dashboard courses={courses} course={course} setCourse={setCourse} addNewCourse={addNewCourse} deleteCourse={deleteCourse} updateCourse={updateCourse} /></ProtectedRoute>} />
+            <Route path="/Dashboard" element={<ProtectedRoute><Dashboard courses={courses} course={course} setCourse={setCourse} addNewCourse={addNewCourse} deleteCourse={deleteCourse} updateCourse={updateCourse} enrolling={enrolling} setEnrolling={setEnrolling} updateEnrollment={updateEnrollment}/></ProtectedRoute>} />
+            <Route path="/Courses" element={<ProtectedRoute><Dashboard courses={courses} course={course} setCourse={setCourse} addNewCourse={addNewCourse} deleteCourse={deleteCourse} updateCourse={updateCourse} enrolling={enrolling} setEnrolling={setEnrolling} updateEnrollment={updateEnrollment}/></ProtectedRoute>} />
             <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} />
             <Route path="/Calendar" element={<h1>Calendar</h1>} />
             <Route path="/Inbox" element={<h1>Inbox</h1>} />
