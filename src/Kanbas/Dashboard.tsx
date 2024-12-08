@@ -72,7 +72,7 @@ export default function Dashboard({
           {isFaculty && (
               <div>
                   <h5>
-                      New Course
+                      Course Management
                       <button
                           className="btn btn-primary float-end"
                           id="wd-add-new-course-click"
