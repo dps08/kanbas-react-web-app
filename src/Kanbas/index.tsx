@@ -61,30 +61,32 @@ export default function Kanbas() {
   };
 
   const deleteCourse = async (courseId: string) => {
-    const status = await courseClient.deleteCourse(courseId);
-    setCourses(courses.filter((course) => course._id !== courseId));
-    const enrollment = enrollments.find(
-      (enrollment: any) =>
-        enrollment.user === currentUser._id && enrollment.course === courseId
-    );
-    if (enrollment) {
-      dispatch(unenroll(enrollment._id));
-      await enrollmentsClient.unEnrollUser(courseId);
+    try {
+        console.log("Deleting course:", courseId); // Debug log
+        const status = await courseClient.deleteCourse(courseId);
+        if (status === 204) {
+            setCourses(courses.filter((course) => course._id !== courseId));
+        } else {
+            console.error("Failed to delete course");
+        }
+    } catch (error) {
+        console.error("Error deleting course:", error);
     }
-  };
+};
+
 
   const updateCourse = async () => {
+    if (!course._id) {
+        console.error("Cannot update course without an ID");
+        return;
+    }
+    console.log("Updating course:", course); // Debug log
     await courseClient.updateCourse(course);
     setCourses(
-      courses.map((c) => {
-        if (c._id === course._id) {
-          return course;
-        } else {
-          return c;
-        }
-      })
+      courses.map((c) => (c._id === course._id ? course : c))
     );
-  };
+};
+
   return (
     <Session>
       <div id="wd-kanbas" className="d-flex">
