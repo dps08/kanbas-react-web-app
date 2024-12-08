@@ -15,6 +15,7 @@ export default function Labs() {
        
 
       <h2 id="wd-name">Divit Pratap Singh</h2>
+      <h3>Section: 03</h3>
       <h1>Labs</h1>
       <TOC></TOC>
       <Routes>
