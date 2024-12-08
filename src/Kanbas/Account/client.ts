@@ -1,5 +1,5 @@
 import axios from "axios";
-export const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
+export const REMOTE_SERVER = "https://kanbas-node-server-app-6-0e365f0d0bc9.herokuapp.com";
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
