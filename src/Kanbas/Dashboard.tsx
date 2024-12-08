@@ -39,20 +39,23 @@ export default function Dashboard({
 
   // Handle enrollments
   const handleUnenroll = async (courseId: string) => {
-      const enrollment = enrollments.find(
-          (enrollment: any) =>
-              enrollment.user === currentUser._id && enrollment.course === courseId
-      );
-      if (enrollment) {
-          dispatch(unenroll(enrollment._id));
-          await enrollmentsClient.unEnrollUser(courseId);
-      }
-  };
+    const enrollment = enrollments.find(
+        (enrollment: any) =>
+            enrollment.user === currentUser._id && enrollment.course === courseId
+    );
+    if (enrollment) {
+        await enrollmentsClient.unEnrollUser(courseId); // Save to backend
+        dispatch(unenroll(enrollment._id)); // Remove the enrollment from Redux store
+    }
+};
+
 
   const handleEnroll = async (courseId: string) => {
-      dispatch(enroll({ user: currentUser._id, course: courseId }));
-      await enrollmentsClient.enrollUser(courseId);
-  };
+    const newEnrollment = { user: currentUser._id, course: courseId };
+    await enrollmentsClient.enrollUser(courseId); // Save to backend
+    dispatch(enroll(newEnrollment)); // Update Redux store with the new enrollment
+};
+
 
   return (
       <div id="wd-dashboard">
@@ -121,8 +124,9 @@ export default function Dashboard({
 
           {/* Published Courses Count */}
           <h2 id="wd-dashboard-published">
-              {"Published Courses"} ({isFaculty ? courses.length : enrolledCourses.length})
-          </h2>
+    {"Published Courses"} ({isFaculty ? courses.length : (showAllCourses ? courses.length : enrolledCourses.length)})
+</h2>
+
           <hr />
 
           {/* Displayed Courses */}
