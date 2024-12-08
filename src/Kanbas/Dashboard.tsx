@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { enroll, unenroll } from "./Account/Enrollments/reducer";
 import * as enrollmentsClient from "./Account/Enrollments/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Course {
   _id: string;
@@ -34,7 +34,6 @@ export default function Dashboard({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
   const dispatch = useDispatch();
-  const isFaculty = currentUser.role === "FACULTY";
   const [showAllCourses, setShowAllCourses] = useState(false);
 
   const enrolledCourses = courses.filter((course) =>
@@ -44,7 +43,12 @@ export default function Dashboard({
     )
   );
 
-  const displayedCourses = showAllCourses ? courses : enrolledCourses;
+  const displayedCourses =
+    currentUser.role === "FACULTY"
+      ? courses
+      : showAllCourses
+      ? courses
+      : enrolledCourses;
 
   const handleUnenroll = async (courseId: string) => {
     const enrollment = enrollments.find(
@@ -62,19 +66,22 @@ export default function Dashboard({
     await enrollmentsClient.enrollUser(courseId);
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCourse({ ...course, image: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
-      {!isFaculty && (
-        <button
-          className="btn btn-primary float-end"
-          onClick={() => setShowAllCourses(!showAllCourses)}
-        >
-          {showAllCourses ? "Show My Courses" : "Browse All Courses"}
-        </button>
-      )}
 
-      {isFaculty && (
+      {currentUser.role === "FACULTY" ? (
         <div>
           <h5>
             New Course
@@ -89,6 +96,7 @@ export default function Dashboard({
               className="btn btn-warning float-end me-2"
               onClick={updateCourse}
               id="wd-update-course-click"
+              disabled={course._id === "0"}
             >
               Update
             </button>
@@ -100,19 +108,43 @@ export default function Dashboard({
             onChange={(e) => setCourse({ ...course, name: e.target.value })}
             placeholder="Course Name"
           />
+          <input
+            value={course.number}
+            className="form-control mb-2"
+            onChange={(e) => setCourse({ ...course, number: e.target.value })}
+            placeholder="Course Number"
+          />
           <textarea
             value={course.description}
-            className="form-control"
+            className="form-control mb-2"
             onChange={(e) =>
               setCourse({ ...course, description: e.target.value })
             }
             placeholder="Course Description"
           />
+          <input
+            type="file"
+            className="form-control mb-2"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
         </div>
+      ) : (
+        <button
+          className="btn btn-primary float-end"
+          onClick={() => setShowAllCourses(!showAllCourses)}
+        >
+          {showAllCourses ? "Show My Courses" : "Browse All Courses"}
+        </button>
       )}
 
       <h2 id="wd-dashboard-published">
-        {"Published Courses"} ({enrollments.length})
+        {currentUser.role === "FACULTY"
+          ? "All Published Courses"
+          : showAllCourses
+          ? "Available Courses"
+          : "My Enrolled Courses"}{" "}
+        ({displayedCourses.length})
       </h2>
       <hr />
       <div id="wd-dashboard-courses" className="row">
@@ -133,7 +165,7 @@ export default function Dashboard({
                 <div className="card h-100 rounded-3 overflow-hidden d-flex flex-column">
                   <Link
                     to={
-                      isEnrolled
+                      currentUser.role === "FACULTY" || isEnrolled
                         ? `/Kanbas/Courses/${course._id}/Home`
                         : "#"
                     }
@@ -157,32 +189,30 @@ export default function Dashboard({
                       </p>
                     </div>
                     <div className="card-footer border-top">
-                      <button className="btn btn-primary">Go</button>
-                      {isFaculty && (
+                      {currentUser.role === "FACULTY" ? (
                         <>
+                          <button
+                            onClick={(event) => {
+                              event.preventDefault();
+                              setCourse(course);
+                            }}
+                            className="btn btn-warning me-2"
+                            id="wd-edit-course-click"
+                          >
+                            Edit
+                          </button>
                           <button
                             onClick={(event) => {
                               event.preventDefault();
                               deleteCourse(course._id);
                             }}
-                            className="btn btn-danger float-end"
+                            className="btn btn-danger"
                             id="wd-delete-course-click"
                           >
                             Delete
                           </button>
-                          <button
-                            id="wd-edit-course-click"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              setCourse(course);
-                            }}
-                            className="btn btn-warning me-2 float-end"
-                          >
-                            Edit
-                          </button>
                         </>
-                      )}
-                      {!isFaculty && (
+                      ) : (
                         <button
                           id={
                             isEnrolled
@@ -193,7 +223,7 @@ export default function Dashboard({
                             isEnrolled
                               ? "btn-danger"
                               : "btn-success"
-                          } float-end`}
+                          }`}
                           onClick={(event) => {
                             event.preventDefault();
                             isEnrolled
