@@ -21,7 +21,7 @@ export default function Kanbas() {
   const [course, setCourse] = useState<any>({
     _id: "0", name: "New Course", number: "New Number",
     startDate: "2024-09-10", endDate: "2024-12-15",
-    imgSource: "/images/reactjs.png", description: "New Description"
+    image: "/images/reactjs.png", description: "New Description"
   });
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
