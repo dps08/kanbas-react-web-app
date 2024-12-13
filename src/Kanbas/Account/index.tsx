@@ -5,7 +5,6 @@ import Signup from "./Signup";
 import AccountNavigation from "./Navigation";
 import { useSelector } from "react-redux";
 import Users from "./Users";
-
 export default function Account() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   return (
