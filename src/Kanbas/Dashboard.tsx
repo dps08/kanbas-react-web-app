@@ -26,6 +26,7 @@ export default function Dashboard({
     updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
+    console.log('currentUser', currentUser);
     const dispatch = useDispatch();
     const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
 

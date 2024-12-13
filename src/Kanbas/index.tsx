@@ -20,7 +20,7 @@ export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
   const [course, setCourse] = useState<any>({
     _id: "0", name: "New Course", number: "New Number",
-    startDate: "2024-09-10", endDate: "2024-12-15",
+    startDate: "2024-09-10", endDate: "2s024-12-15",
     imgSource: "/images/reactjs.png", description: "New Description"
   });
   const dispatch = useDispatch();
